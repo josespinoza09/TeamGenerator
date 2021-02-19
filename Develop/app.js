@@ -29,6 +29,45 @@ async function getManager() {
 }
 getManager()
 
+async function createEmployees() {
+    const employeeSelection = await inquirer.prompt([
+        { type: 'list', message: 'Select the employee you want to add.', name: 'employee', choices: ['Engineer', 'Intern', 'No more employees'] }
+    ])
+    if (employeeSelection.employee === 'Engineer'){
+        getEngineer();
+    }else if(employeeSelection.employee === 'Intern'){
+        getIntern();
+    }else{
+        process.exit
+    }
+}
+async function getEngineer(){
+    const eQuestions = [
+        { message: 'What is the engineers name?', name: 'name' },
+        { message: 'What is the engineers id?', name: 'id' },
+        { message: 'What is the engineers email?', name: 'email' },
+        {message:'What is the engineers github?', name:'github'}
+    ]
+    const response = await inquirer.prompt(eQuestions)
+    const engineer = new Engineer(response.name,response.id,response.email,response.github)
+    employees.push(engineer)
+    fs.writeFileSync(outputPath, render(employees), 'UTF-8')
+    createEmployees();
+}
+
+async function getIntern(){
+    const iQuestions = [
+        { message: 'What is the engineers name?', name: 'name' },
+        { message: 'What is the engineers id?', name: 'id' },
+        { message: 'What is the engineers email?', name: 'email' },
+        {message: 'What is the interns school?', name:'school'}
+    ]
+    const response = await inquirer.prompt(iQuestions)
+    const intern = new Intern(response.name,response.id,response.email,response.school)
+    employees.push(intern)
+    fs.writeFileSync(outputPath, render(employees), 'UTF-8')
+    createEmployees();
+}
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
