@@ -9,6 +9,25 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const { create } = require("domain");
+
+const employees = []
+
+async function getManager() {
+    const mQuestions = [
+        { message: 'What is the managers name?', name: 'name' },
+        { message: 'What is the managers id?', name: 'id' },
+        { message: 'What is the managers email?', name: 'email' },
+        { message: 'What is the managers office number?', name: 'officeNum' }
+    ]
+
+    const response = await inquirer.prompt(mQuestions)
+    const manager = new Manager(response.name, response.id, response.email, response.officeNum)
+    employees.push(manager)
+    fs.writeFileSync(outputPath, render(employees), 'UTF-8')
+    createEmployees()
+}
+getManager()
 
 
 // Write code to use inquirer to gather information about the development team members,
